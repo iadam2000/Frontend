@@ -1,16 +1,20 @@
+import { Routes, Route } from "react-router-dom";
 import Header from "./Header";
 import ArticleList from "./ArticleList";
-import { useState } from "react";
+import ArticleCard from './ArticleCard';
+import SingleArticle from './SingleArticle';
 
 const App = () => {
-   
   return (
     <>
       <Header />
-      <br/>
-      <ArticleList />
+      <br />
+      <Routes>
+        <Route path="/" element={<ArticleList />} />
+        <Route path="/articles/:articleId" element={<SingleArticle />} />
+      </Routes>
     </>
   );
-}
+};
 
 export default App;

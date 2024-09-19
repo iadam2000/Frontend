@@ -1,19 +1,32 @@
 import "./styles.css";
 import ArticleCard from "./ArticleCard";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { fetchArticleList } from "./api";
 
 const ArticleList = () => {
   const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("https://backend-project-u7dc.onrender.com/api/articles/")
-      .then((response) => {
-        setArticles(response.data.articles);
-      })
-      .catch((error) => console.log(error, "-- Error caught"));
+    const fetchArticles = async () => {
+      try {
+        const articlesData = await fetchArticleList();
+        setArticles(articlesData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error caught:", error);
+      }
+    };
+    fetchArticles();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div>
+        Loading
+      </div>
+    );
+  }
 
   return (
     <div>
