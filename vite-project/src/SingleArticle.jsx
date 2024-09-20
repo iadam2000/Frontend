@@ -1,5 +1,9 @@
 import { useParams } from "react-router-dom";
-import { fetchSingleArticle, fetchArticleComments } from "./api";
+import {
+  fetchSingleArticle,
+  fetchArticleComments,
+  patchArticleVotes,
+} from "./api";
 import { useEffect, useState } from "react";
 import "./styles.css";
 
@@ -7,7 +11,6 @@ const SingleArticle = () => {
   const { articleId } = useParams();
   const [article, setArticle] = useState([]);
   const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,15 +19,37 @@ const SingleArticle = () => {
         setArticle(data);
         const commentsData = await fetchArticleComments(articleId);
         setComments(commentsData);
-        console.log(comments)
       } catch (error) {
         console.log("Error fetching article: ", error);
-      } 
+      }
     };
     fetchData();
   }, [articleId]);
 
+  const handleVote = async (change) => {
+    try {
+      // Ensure the current votes are a valid number before performing arithmetic
+      const currentVotes =
+        article.votes !== undefined ? Number(article.votes) : 0;
 
+      // Optimistically update the vote count before the server response
+      setArticle((prevArticle) => ({
+        ...prevArticle,
+        votes: currentVotes + change, // Safely add the vote change
+      }));
+
+      // Send the PATCH request to the backend to persist the vote change
+      const updatedArticle = await patchArticleVotes(articleId, change);
+
+      // Ensure that the final vote count is updated after the response
+      setArticle((prevArticle) => ({
+        ...prevArticle,
+        votes: updatedArticle.article.votes, // Use the confirmed vote count from the server
+      }));
+    } catch (error) {
+      console.log(error, "Error voting");
+    }
+  };
 
   return (
     <div className="singleArticle">
@@ -40,6 +65,7 @@ const SingleArticle = () => {
         <p className="article-topic">
           <strong>Topic:</strong> {article.topic}
         </p>
+
         <p className="article-date">
           <strong>Published:</strong>{" "}
           {new Date(article.created_at).toLocaleDateString()}
@@ -53,9 +79,10 @@ const SingleArticle = () => {
           <p className="article-votes">
             <strong>Votes:</strong> {article.votes}
           </p>
-          <p className="article-comments">
-            <strong>Comments:</strong> {article.comment_count}
-          </p>
+          <div className="vote-buttons">
+            <button onClick={() => handleVote(1)}>Upvote</button>
+            <button onClick={() => handleVote(-1)}>Downvote</button>
+          </div>
         </div>
 
         <div className="comments-section">
@@ -79,7 +106,6 @@ const SingleArticle = () => {
             <p>No comments yet.</p>
           )}
         </div>
-        
       </div>
     </div>
   );
