@@ -1,6 +1,6 @@
 import "./styles.css";
 import ArticleCard from "./ArticleCard";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchArticleList } from "./api";
 
 const ArticleList = () => {
@@ -22,9 +22,9 @@ const ArticleList = () => {
 
   if (isLoading) {
     return (
-      <div>
+      <p>
         Loading
-      </div>
+      </p>
     );
   }
 

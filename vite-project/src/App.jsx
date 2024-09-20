@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./Header";
 import ArticleList from "./ArticleList";
-import ArticleCard from './ArticleCard';
 import SingleArticle from './SingleArticle';
 
 const App = () => {
