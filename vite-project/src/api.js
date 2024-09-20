@@ -35,3 +35,14 @@ export const fetchArticleComments = async (articleId) => {
         console.log("Error fetching comments", error);
     }
 };
+
+export const patchArticleVotes = async (articleId, newVote) => {
+    try {
+        const response = await apiClient.patch(`/articles/${articleId}`, {
+            inc_votes: newVote,
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error('Error updating article votes: ' + error.message);
+    }
+};
