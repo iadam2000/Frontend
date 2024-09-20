@@ -20,8 +20,18 @@ export const fetchSingleArticle = async (id) => {
     try {
         const response = await apiClient.get(`/articles/${id}`);
         return response.data.article;
+        
     } catch (error) {
         console.error("Error fetching articles:", error);
         throw error;
+    }
+};
+
+export const fetchArticleComments = async (articleId) => {
+    try {
+        const response = await apiClient.get(`/articles/${articleId}/comments`);
+        return response.data.comments;
+    } catch (error) {
+        console.log("Error fetching comments", error);
     }
 };
