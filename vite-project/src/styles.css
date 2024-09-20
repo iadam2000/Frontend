@@ -112,7 +112,6 @@ Header {
     color: #888;
 }
 
-/* Adjustments for larger screens (desktop) */
 @media (min-width: 1024px) {
     .SingleArticle {
         display: grid;
@@ -155,4 +154,34 @@ Header {
         line-height: 1.8;
         /* Add more spacing for readability */
     }
+}
+
+.comments-section {
+    margin-top: 40px;
+}
+
+.comments-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.comment-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.comment-author {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.comment-body {
+    margin-bottom: 5px;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: #777;
 }

@@ -1,23 +1,30 @@
 import { useParams } from "react-router-dom";
-import { fetchSingleArticle } from "./api";
-import { useEffect } from "react";
-import { useState } from "react";
-import './styles.css'
+import { fetchSingleArticle, fetchArticleComments } from "./api";
+import { useEffect, useState } from "react";
+import "./styles.css";
+
 const SingleArticle = () => {
   const { articleId } = useParams();
   const [article, setArticle] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchSingleArticle(articleId);
         setArticle(data);
+        const commentsData = await fetchArticleComments(articleId);
+        setComments(commentsData);
+        console.log(comments)
       } catch (error) {
         console.log("Error fetching article: ", error);
-      }
+      } 
     };
     fetchData();
   }, [articleId]);
+
+
 
   return (
     <div className="singleArticle">
@@ -39,7 +46,7 @@ const SingleArticle = () => {
         </p>
 
         <div className="article-body">
-          <p>{article.body}</p> 
+          <p>{article.body}</p>
         </div>
 
         <div className="article-votes-comments">
@@ -50,6 +57,29 @@ const SingleArticle = () => {
             <strong>Comments:</strong> {article.comment_count}
           </p>
         </div>
+
+        <div className="comments-section">
+          <h2>Comments ({comments.length})</h2>
+          {comments.length > 0 ? (
+            <ul className="comments-list">
+              {comments.map((comment) => (
+                <li key={comment.comment_id} className="comment-item">
+                  <p className="comment-author">
+                    <strong>{comment.author}</strong> says:
+                  </p>
+                  <p className="comment-body">{comment.body}</p>
+                  <p className="comment-date">
+                    Posted on:{" "}
+                    {new Date(comment.created_at).toLocaleDateString()}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No comments yet.</p>
+          )}
+        </div>
+        
       </div>
     </div>
   );
